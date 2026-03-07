@@ -1,16 +1,16 @@
 love = require("love")
 variables = require("variables")
-functions = require("functions")
+playerFunctions = require("playerFunctions")
 
 function love.load()
     variables()
 end
 
 function love.update(dt)
-    functions.playerMovement(dt)
+    playerFunctions.playerMovement(dt)
 end
 
 function love.draw()
-    functions.drawGround()
-    functions.drawPlayer()
+    playerFunctions.drawGround()
+    playerFunctions.drawPlayer()
 end

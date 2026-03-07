@@ -4,8 +4,10 @@ function variables()
         x = 520,
         y = 600,
         speed = 150,
-        jumpforce = 30,
+        jumpforce = 5,
         gravity = 10,
+        jumpAcceleration = 5,
+        isJumping = false,
         image = love.graphics.newImage("sprites/player.png")
     }
 

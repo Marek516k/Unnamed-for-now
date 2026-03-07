@@ -14,26 +14,31 @@ function CheckGroundCollision()
     end
 end
 function playerMovement(dt)
-    CheckGroundCollision()
-
-    if not isOnGround then
-        acceleration = acceleration + player.gravity * dt
-        player.y = player.y + acceleration * dt * player.speed / 4.5
-
-    else
-        acceleration = 0
-    end
-
-    if love.keyboard.isDown("w") and isOnGround then
-        player.y = player.y - player.jumpforce * dt * player.speed
-    end
-
     if love.keyboard.isDown("a") then
         player.x = player.x - player.speed * dt
     end
 
     if love.keyboard.isDown("d") then
         player.x = player.x + player.speed * dt
+    end
+
+    if love.keyboard.isDown("w") and isOnGround and not player.isJumping then
+        acceleration = -player.jumpforce
+        player.isJumping = true
+    end
+
+    if player.isJumping or not isOnGround then
+        acceleration = acceleration + player.gravity * dt
+        if love.keyboard.isDown("w") and player.isJumping then
+            acceleration = acceleration - player.jumpAcceleration * dt
+        end
+        player.y = player.y + acceleration * dt * player.speed / 4.5
+    end
+
+    CheckGroundCollision()
+    if isOnGround then
+        acceleration = 0
+        player.isJumping = false
     end
 
     if love.keyboard.isDown("escape") then

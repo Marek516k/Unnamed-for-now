@@ -1,40 +1,33 @@
 function Variables()
-    love.window.setMode(1080, 720, {resizable=true, vsync=true})
-
-    player = {
-        x = 520,
-        y = 590,
+    local playerImage = love.graphics.newImage("sprites/Player.png")
+    Player = {
+        x = 600,
+        y = 400,
         speed = 150,
         jumpforce = 6,
         gravity = 10,
         jumpAcceleration = 4,
         isJumping = false,
-        image = love.graphics.newImage("sprites/player.png"),
-        width = love.graphics.newImage("sprites/player.png"):getWidth(),
-        height = love.graphics.newImage("sprites/player.png"):getHeight()
+        image = playerImage,
+        width = playerImage:getWidth(),
+        height = playerImage:getHeight()
     }
 
-    enemy = {
-        x = 720,
-        y = 600,
+    local enemyImage = love.graphics.newImage("sprites/Enemy.png")
+    Enemy = {
+        x = 200,
+        y = 400,
         speed = 100,
-        jumpforce = 7,
         gravity = 10,
+        jumpforce = 6,
         jumpAcceleration = 4,
         isJumping = false,
-        image = love.graphics.newImage("sprites/enemy.png"),
-        width = love.graphics.newImage("sprites/enemy.png"):getWidth(),
-        height = love.graphics.newImage("sprites/enemy.png"):getHeight()
+        image = enemyImage,
+        width = enemyImage:getWidth(),
+        height = enemyImage:getHeight()
     }
 
-    platforms = {
-        {
-            x = 0,
-            y = 600,
-            width = 1080,
-            height = 50,
-            color = {0.5, 0.5, 0.5}
-        },
+    Platforms = {
         {
             x = 200,
             y = 540,

@@ -5,29 +5,30 @@ require("enemyFunctions")
 require("Platforms")
 
 function love.load()
+    love.window.setMode(1080, 720, {resizable = false, vsync = false})
     Variables()
 end
 
 function love.update(dt)
-    EnemyMovement(dt)
     PlayerMovement(dt)
+    EnemyMovement(dt)
 end
 
 function love.draw()
     DrawPlatforms()
-    DrawPlayer()
     DrawEnemy()
+    DrawPlayer()
 end
 
 -- TODO:
--- enemy movement correction
--- player and enemy hitboxes, collision detection and response
--- player health and other GUI elements, enemy health + rewards?
--- enemy and player attack and animation
--- enemy death animation, player death animation and game over screen
+-- Enemy movement correction
+-- Player and Enemy hitboxes, collision detection and response
+-- Player health and other GUI elements, Enemy health + rewards?
+-- Enemy and Player attack and animation
+-- Enemy death animation, Player death animation and game over screen
 -- room designing, dungeon generation
 -- make an actual system for this
--- more enemies, more player abilities, traps, collectibles, secrets, etc.
+-- more enemies, more Player abilities, traps, collectibles, secrets, etc.
 -- sets, boss fights, etc.
 -- overlays, parallax backgrounds, etc.
 -- overhaul of the code and graphics, maybe a different art style, etc.

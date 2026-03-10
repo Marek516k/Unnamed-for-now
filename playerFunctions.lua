@@ -3,13 +3,13 @@ local isOnPlatform = false
 
 function CheckGroundCollision()
     isOnPlatform = false
-    for _, platform in pairs(platforms) do
-        if player.y + player.height >= platform.y and
-            player.y < platform.y + platform.height and
-            player.x + player.width > platform.x and
-            player.x < platform.x + platform.width then
+    for _, platform in pairs(Platforms) do
+        if Player.y + Player.height >= platform.y and
+            Player.y < platform.y + platform.height and
+            Player.x + Player.width > platform.x and
+            Player.x < platform.x + platform.width then
             isOnPlatform = true
-            player.y = platform.y - player.height
+            Player.y = platform.y - Player.height
             break
         end
     end
@@ -17,30 +17,30 @@ end
 
 function PlayerMovement(dt)
     if love.keyboard.isDown("a") then
-        player.x = player.x - player.speed * dt
+        Player.x = Player.x - Player.speed * dt
     end
 
     if love.keyboard.isDown("d") then
-        player.x = player.x + player.speed * dt
+        Player.x = Player.x + Player.speed * dt
     end
 
-    if love.keyboard.isDown("w") and isOnPlatform and not player.isJumping then
-        acceleration = acceleration - player.jumpforce
-        player.isJumping = true
+    if love.keyboard.isDown("w") and isOnPlatform and not Player.isJumping then
+        acceleration = acceleration - Player.jumpforce
+        Player.isJumping = true
     end
 
-    if player.isJumping or not isOnPlatform then
-        acceleration = acceleration + player.gravity * dt
-        if love.keyboard.isDown("w") and player.isJumping then
-            acceleration = acceleration - player.jumpAcceleration * dt
+    if Player.isJumping or not isOnPlatform then
+        acceleration = acceleration + Player.gravity * dt
+        if love.keyboard.isDown("w") and Player.isJumping then
+            acceleration = acceleration - Player.jumpAcceleration * dt
         end
-        player.y = player.y + acceleration * dt * player.speed / 5
+        Player.y = Player.y + acceleration * dt * Player.speed / 5
     end
 
     CheckGroundCollision()
     if isOnPlatform then
         acceleration = 0
-        player.isJumping = false
+        Player.isJumping = false
     end
 
     if love.keyboard.isDown("escape") then
@@ -49,5 +49,5 @@ function PlayerMovement(dt)
 end
 
 function DrawPlayer()
-    love.graphics.draw(player.image, player.x, player.y)
+    love.graphics.draw(Player.image, Player.x, Player.y)
 end

@@ -1,5 +1,5 @@
 function DrawPlatforms()
-    for _, platform in pairs(platforms) do
+    for _, platform in pairs(Platforms) do
         love.graphics.setColor(platform.color)
         love.graphics.rectangle("fill", platform.x, platform.y, platform.width, platform.height)
     end

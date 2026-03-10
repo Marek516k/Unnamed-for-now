@@ -3,33 +3,33 @@ local EisOnPlatform = false
 
 function ECheckGroundCollision()
     EisOnPlatform = false
-    for _, platform in pairs(platforms) do
-        if enemy.y + enemy.height >= platform.y and
-            enemy.y < platform.y + platform.height and
-            enemy.x + enemy.width > platform.x and
-            enemy.x < platform.x + platform.width then
+    for _, platform in pairs(Platforms) do
+        if Enemy.y + Enemy.height >= platform.y and
+            Enemy.y < platform.y + platform.height and
+            Enemy.x + Enemy.width > platform.x and
+            Enemy.x < platform.x + platform.width then
             EisOnPlatform = true
-            enemy.y = platform.y - enemy.height
+            Enemy.y = platform.y - Enemy.height
             break
         end
     end
 end
 
 function EnemyMovement(dt)
-    local dx = player.x - enemy.x
-    local dy = player.y - enemy.y
+    local dx = Player.x - Enemy.x
+    local dy = Player.y - Enemy.y
 
     if dx > 10 then  -- Player is to the right
-        enemy.x = enemy.x + enemy.speed * dt
+        Enemy.x = Enemy.x + Enemy.speed * dt
     elseif dx < -10 then  -- Player is to the left
-        enemy.x = enemy.x - enemy.speed * dt
+        Enemy.x = Enemy.x - Enemy.speed * dt
     end
 
-    if dy < 0 and EisOnPlatform and not enemy.isJumping then
+    if dy < - 10 and EisOnPlatform and not Enemy.isJumping then
         local canJump = false
-        for _, platform in pairs(platforms) do
-            if enemy.x + enemy.width > platform.x and enemy.x < platform.x + platform.width then
-                if platform.y > enemy.y then
+        for _, platform in pairs(Platforms) do
+            if Enemy.x + Enemy.width > platform.x and Enemy.x < platform.x + platform.width then
+                if platform.y > Enemy.y then
                     canJump = true
                     break
                 end
@@ -37,23 +37,24 @@ function EnemyMovement(dt)
         end
 
         if canJump then
-            acceleration = acceleration - enemy.jumpforce
-            enemy.isJumping = true
+            acceleration = acceleration - Enemy.jumpforce
+            Enemy.isJumping = true
         end
     end
 
-    if enemy.isJumping or not EisOnPlatform then
-        acceleration = acceleration + enemy.gravity * dt
-        enemy.y = enemy.y + acceleration * dt * enemy.speed / 5
+    if Enemy.isJumping or not EisOnPlatform then
+        acceleration = acceleration + Enemy.gravity * dt
+        Enemy.y = Enemy.y + acceleration * dt * Enemy.speed / 5
     end
 
     ECheckGroundCollision()
+
     if EisOnPlatform then
         acceleration = 0
-        enemy.isJumping = false
+        Enemy.isJumping = false
     end
 end
 
 function DrawEnemy()
-    love.graphics.draw(enemy.image, enemy.x, enemy.y)
+    love.graphics.draw(Enemy.image, Enemy.x, Enemy.y)
 end

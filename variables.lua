@@ -1,5 +1,7 @@
+local enemyImage = love.graphics.newImage("sprites/Enemy.png")
+local playerImage = love.graphics.newImage("sprites/Player.png")
+
 function Variables()
-    local playerImage = love.graphics.newImage("sprites/Player.png")
     Player = {
         x = 600,
         y = 400,
@@ -13,11 +15,10 @@ function Variables()
         height = playerImage:getHeight()
     }
 
-    local enemyImage = love.graphics.newImage("sprites/Enemy.png")
     Enemy = {
         x = 200,
         y = 400,
-        speed = 100,
+        speed = 120,
         gravity = 10,
         jumpforce = 6,
         jumpAcceleration = 4,
@@ -28,6 +29,13 @@ function Variables()
     }
 
     Platforms = {
+        {
+            x = 0,
+            y = 580,
+            width = 1080,
+            height = 20,
+            color = {0.5, 0.5, 0.5}
+        },
         {
             x = 200,
             y = 540,

@@ -49,6 +49,37 @@ function ECheckSideCollision()
     end
 end
 
+function EnemyCanJumpFromPlatform()
+    if not EisOnPlatform then
+        return false
+    end
+
+    local currentPlatform = nil
+    for _, platform in pairs(Platforms) do
+        if Enemy.y + Enemy.height >= platform.y and
+            Enemy.y < platform.y + platform.height and
+            Enemy.x + Enemy.width > platform.x and
+            Enemy.x < platform.x + platform.width then
+            currentPlatform = platform
+            break
+        end
+    end
+
+    if not currentPlatform then
+        return false
+    end
+
+    if currentPlatform.width > 400 then
+        return true
+    end
+
+    local edgeThreshold = 2
+    local distanceFromLeft = Enemy.x - currentPlatform.x
+    local distanceFromRight = (currentPlatform.x + currentPlatform.width) - (Enemy.x + Enemy.width)
+
+    return distanceFromLeft < edgeThreshold or distanceFromRight < edgeThreshold
+end
+
 function EnemyMovement(dt)
     local dx = Player.x - Enemy.x
     local dy = Player.y - Enemy.y
@@ -78,7 +109,7 @@ function EnemyMovement(dt)
             end
         end
 
-        if canJump then
+        if canJump and EnemyCanJumpFromPlatform() then
             acceleration = acceleration - Enemy.jumpforce
             Enemy.isJumping = true
         end

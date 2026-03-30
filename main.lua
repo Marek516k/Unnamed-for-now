@@ -20,6 +20,12 @@ function love.draw()
     DrawPlayer()
 end
 
+function love.keypressed(key)
+    if key == "escape" then
+        love.event.quit()
+    end
+end
+
 -- TODO:
 -- Enemy movement correction
 -- Player and Enemy hitboxes, collision detection and response

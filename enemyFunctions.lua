@@ -1,5 +1,8 @@
 local acceleration = 0
 local EisOnPlatform = false
+local jumpAttemptTimer = 0
+local randomMoveTimer = 0
+local randomMoveDirection = 0
 
 function ECheckGroundCollision()
     EisOnPlatform = false
@@ -80,25 +83,86 @@ function EnemyCanJumpFromPlatform()
     return distanceFromLeft < edgeThreshold or distanceFromRight < edgeThreshold
 end
 
+function GetCurrentEnemyPlatform()
+    for _, platform in pairs(Platforms) do
+        if Enemy.y + Enemy.height >= platform.y and
+            Enemy.y < platform.y + platform.height and
+            Enemy.x + Enemy.width > platform.x and
+            Enemy.x < platform.x + platform.width then
+            return platform
+        end
+    end
+    return nil
+end
+
+function FindLowestPlatform()
+    local currentPlatform = GetCurrentEnemyPlatform()
+    if not currentPlatform then return nil end
+
+    local lowestPlatform = nil
+    local lowestY = currentPlatform.y
+
+    for _, platform in pairs(Platforms) do
+        if platform.y > lowestY and platform.width > 400 then
+            lowestY = platform.y
+            lowestPlatform = platform
+        end
+    end
+
+    return lowestPlatform
+end
+
 function EnemyMovement(dt)
     local dx = Player.x - Enemy.x
     local dy = Player.y - Enemy.y
 
+    randomMoveTimer = randomMoveTimer - dt
+    if randomMoveTimer <= 0 then
+        randomMoveDirection = math.random(-1, 1)
+        randomMoveTimer = math.random(1, 3)
+    end
+
+    local moveDirection = 0
+    local tryingToJump = false
+
+    if dy < -10 and EisOnPlatform and not Enemy.isJumping then
+        tryingToJump = true
+        jumpAttemptTimer = jumpAttemptTimer + dt
+        -- can't jump for 1.5 seconds, find lowest platform
+        if jumpAttemptTimer > 1.5 then
+            local lowestPlatform = FindLowestPlatform()
+            if lowestPlatform then
+                dx = lowestPlatform.x + lowestPlatform.width / 2 - (Enemy.x + Enemy.width / 2)
+            end
+            jumpAttemptTimer = 0
+        end
+    else
+        jumpAttemptTimer = 0
+    end
+
     if dx > 10 then  -- Player is to the right
         if Enemy.x > love.graphics.getWidth() - Enemy.width then
-            Enemy.x = Enemy.x
+            moveDirection = 0
         else
-            Enemy.x = Enemy.x + Enemy.speed * dt
+            moveDirection = 1
         end
     elseif dx < -10 then  -- Player is to the left
         if Enemy.x < 0 then
-            Enemy.x = Enemy.x
+            moveDirection = 0
         else
-            Enemy.x = Enemy.x - Enemy.speed * dt
+            moveDirection = -1
         end
+    else
+        moveDirection = randomMoveDirection
     end
 
-    if dy < - 10 and EisOnPlatform and not Enemy.isJumping then
+    if moveDirection > 0 then
+        Enemy.x = Enemy.x + Enemy.speed * dt
+    elseif moveDirection < 0 then
+        Enemy.x = Enemy.x - Enemy.speed * dt
+    end
+
+    if dy < -10 and EisOnPlatform and not Enemy.isJumping then
         local canJump = false
         for _, platform in pairs(Platforms) do
             if Enemy.x + Enemy.width > platform.x then
@@ -112,6 +176,7 @@ function EnemyMovement(dt)
         if canJump and EnemyCanJumpFromPlatform() then
             acceleration = acceleration - Enemy.jumpforce
             Enemy.isJumping = true
+            jumpAttemptTimer = 0
         end
     end
 

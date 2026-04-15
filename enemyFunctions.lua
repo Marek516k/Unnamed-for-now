@@ -1,8 +1,10 @@
+require("combat")
+
 local acceleration = 0
 local EisOnPlatform = false
 local jumpAttemptTimer = 0
-local randomMoveTimer = 0
-local randomMoveDirection = 0
+--local randomMoveTimer = 0
+--local randomMoveDirection = 0
 
 function ECheckGroundCollision()
     EisOnPlatform = false
@@ -58,6 +60,7 @@ function EnemyCanJumpFromPlatform()
     end
 
     local currentPlatform = nil
+
     for _, platform in pairs(Platforms) do
         if Enemy.y + Enemy.height >= platform.y and
             Enemy.y < platform.y + platform.height and
@@ -116,11 +119,11 @@ function EnemyMovement(dt)
     local dx = Player.x - Enemy.x
     local dy = Player.y - Enemy.y
 
-    randomMoveTimer = randomMoveTimer - dt
-    if randomMoveTimer <= 0 then
-        randomMoveDirection = math.random(-1, 1)
-        randomMoveTimer = math.random(1, 3)
-    end
+    --randomMoveTimer = randomMoveTimer - dt
+    --if randomMoveTimer <= 0 then
+        --randomMoveDirection = math.random(-10, 10)
+        --randomMoveTimer = math.random(1, 3)
+    --end
 
     local moveDirection = 0
     local tryingToJump = false
@@ -128,8 +131,8 @@ function EnemyMovement(dt)
     if dy < -10 and EisOnPlatform and not Enemy.isJumping then
         tryingToJump = true
         jumpAttemptTimer = jumpAttemptTimer + dt
-        -- can't jump for 1.5 seconds, find lowest platform
-        if jumpAttemptTimer > 1.5 then
+        -- can't jump for 2 seconds, find lowest platform (well try to at least)
+        if jumpAttemptTimer > 2 then
             local lowestPlatform = FindLowestPlatform()
             if lowestPlatform then
                 dx = lowestPlatform.x + lowestPlatform.width / 2 - (Enemy.x + Enemy.width / 2)
@@ -150,10 +153,10 @@ function EnemyMovement(dt)
         if Enemy.x < 0 then
             moveDirection = 0
         else
-            moveDirection = -1
+            moveDirection = - 1
         end
-    else
-        moveDirection = randomMoveDirection
+    --else
+       -- moveDirection = randomMoveDirection
     end
 
     if moveDirection > 0 then
@@ -185,14 +188,17 @@ function EnemyMovement(dt)
         Enemy.y = Enemy.y + acceleration * dt * Enemy.speed / 5
     end
 
-    ECheckSideCollision()
-    ECheckHeadCollision()
+    if Enemy.isJumping then
+        ECheckSideCollision()
+        ECheckHeadCollision()
+    end
     ECheckGroundCollision()
 
     if EisOnPlatform then
         acceleration = 0
         Enemy.isJumping = false
     end
+    EnemyAttack(Enemy.x, Enemy.y, Enemy.type)
 end
 
 function DrawEnemy()

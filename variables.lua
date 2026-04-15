@@ -12,7 +12,8 @@ function Variables()
         isJumping = false,
         image = playerImage,
         width = playerImage:getWidth(),
-        height = playerImage:getHeight()
+        height = playerImage:getHeight(),
+        health = 100
     }
 
     Enemy = {
@@ -25,7 +26,8 @@ function Variables()
         isJumping = false,
         image = enemyImage,
         width = enemyImage:getWidth(),
-        height = enemyImage:getHeight()
+        height = enemyImage:getHeight(),
+        type = "cube"
     }
 
     Platforms = {

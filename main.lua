@@ -3,6 +3,7 @@ require("variables")
 require("playerFunctions")
 require("enemyFunctions")
 require("Platforms")
+require("combat")
 
 function love.load()
     love.window.setMode(1080, 720, {resizable = false, vsync = false})
@@ -16,8 +17,9 @@ end
 
 function love.draw()
     DrawPlatforms()
-    DrawEnemy()
+    DisplayHP(Player.health)
     DrawPlayer()
+    DrawEnemy()
 end
 
 function love.keypressed(key)

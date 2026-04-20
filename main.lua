@@ -4,20 +4,24 @@ require("playerFunctions")
 require("enemyFunctions")
 require("Platforms")
 require("combat")
+require("weapon_anim")
 
 function love.load()
     love.window.setMode(1080, 720, {resizable = false, vsync = false})
     Variables()
+    loadSheets()
 end
 
 function love.update(dt)
     PlayerMovement(dt)
     EnemyMovement(dt)
+    updateSheet(dt)
 end
 
 function love.draw()
     DrawPlatforms()
     DisplayHP(Player.health)
+    DrawSheet()
     DrawPlayer()
     DrawEnemy()
 end

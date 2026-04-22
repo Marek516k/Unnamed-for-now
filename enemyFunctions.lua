@@ -126,10 +126,10 @@ function EnemyMovement(dt)
     --end
 
     local moveDirection = 0
-    local tryingToJump = false
+    --local tryingToJump = false
 
     if dy < -10 and EisOnPlatform and not Enemy.isJumping then
-        tryingToJump = true
+        --tryingToJump = true
         jumpAttemptTimer = jumpAttemptTimer + dt
         -- can't jump for 2 seconds, find lowest platform (well try to at least)
         if jumpAttemptTimer > 2 then
@@ -203,4 +203,8 @@ end
 
 function DrawEnemy()
     love.graphics.draw(Enemy.image, Enemy.x, Enemy.y)
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", Enemy.x - 10, Enemy.y - 30, Enemy.health * 2, 20)
+    love.graphics.setColor(0.50, 0.11, 0.80)
+    love.graphics.rectangle("line", Enemy.x - 9, Enemy.y - 29, 200, 20)
 end

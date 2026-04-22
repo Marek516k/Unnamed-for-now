@@ -5,6 +5,7 @@ require("enemyFunctions")
 require("Platforms")
 require("combat")
 require("weapon_anim")
+require("enemyAnimations")
 
 function love.load()
     love.window.setMode(1080, 720, {resizable = false, vsync = false})
@@ -13,9 +14,9 @@ function love.load()
 end
 
 function love.update(dt)
+    updateSheet(dt)
     PlayerMovement(dt)
     EnemyMovement(dt)
-    updateSheet(dt)
 end
 
 function love.draw()
@@ -24,6 +25,19 @@ function love.draw()
     DrawSheet()
     DrawPlayer()
     DrawEnemy()
+    love.graphics.rectangle(
+        "line",
+        Enemy.x,
+        Enemy.y,
+        Enemy.width + 2,
+        Enemy.height + 2)
+
+    love.graphics.rectangle(
+        "line",
+        weapon.x,
+        weapon.y,
+        32,32
+    )
 end
 
 function love.keypressed(key)

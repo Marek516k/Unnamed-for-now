@@ -21,36 +21,31 @@ function DrawSheet()
         love.graphics.draw(
             SpriteSheet,
             frames[currentFrame],
-            weapon.x, weapon.y,
+            Player.x + 16, Player.y,
             0,
             1, 1,
-            weapon.width/2, weapon.height/2
+            16, 16
         )
     else
         love.graphics.draw(
             SpriteSheet,
             frames[1],
-            weapon.x, weapon.y,
+            Player.x + 16, Player.y,
             0,
             1, 1,
-            weapon.height/2, weapon.width/2
+            16, 16
         )
     end
 end
 
-function CheckWeaponCollision()
-   if weapon.x < Enemy.x + Enemy.width and weapon.x + weapon.width > Enemy.x and weapon.y < Enemy.y + Enemy.height and weapon.y + weapon.height > Enemy.y then
-        Enemy.health = Enemy.health - weapon.damage
-    end
-end
-
 function updateSheet(dt)
-    weapon.x = Player.x + Player.width
-    weapon.y = Player.y + Player.height/2
+    if love.mouse.isDown(1) then
+        attacking = true
+    end
+
     if attacking then
-        CheckWeaponCollision()
         timer = (timer or 0) + dt
-        speed = 0.2
+        speed = 0.1
 
         if timer >= speed then
             timer = timer - speed
@@ -59,10 +54,5 @@ function updateSheet(dt)
                 attacking = false
             end
         end
-    end
-
-    if love.mouse.isDown(1) and not attacking then
-        attacking = true
-        currentFrame = 1
     end
 end

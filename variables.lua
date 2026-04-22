@@ -27,7 +27,8 @@ function Variables()
         image = enemyImage,
         width = enemyImage:getWidth(),
         height = enemyImage:getHeight(),
-        type = "cube"
+        type = "cube",
+        health = 100
     }
 
     Platforms = {
@@ -40,24 +41,31 @@ function Variables()
         },
         {
             x = 200,
-            y = 540,
+            y = 470,
             width = 200,
             height = 20,
             color = {0.5, 0.5, 0.8}
         },
         {
             x = 450,
-            y = 500,
+            y = 450,
             width = 200,
-            height = 30,
+            height = 20,
             color = {0.7, 0.5, 0.5}
         },
         {
-            x = 600,
+            x = 650,
             y = 450,
             width = 200,
             height = 20,
             color = {0.5, 0.7, 0.5}
         }
+    }
+    weapon = {
+        x = Player.x + 16,
+        y = Player.y,
+        width = 32,
+        height = 32,
+        damage = 25
     }
 end

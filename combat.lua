@@ -1,40 +1,29 @@
-local Heart_image = love.graphics.newImage("sprites/Heart.png")
+local Config = require("config")
+
+local Combat = {}
+
 local hitTimer = 0
 
-function Takedmg(enemyType)
-    if enemyType == "cube" then
-        Player.health = Player.health - 10
-    elseif enemyType == "slime" then
-        Player.health = Player.health - 200
-    end
-end
-
-function DisplayHP(currentHP)
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", 20, 20, currentHP * 2, 20)
-    love.graphics.setColor(0.50, 0.11, 0.80)
-    love.graphics.rectangle("line", 21, 21, 200, 20)
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.print(currentHP, 50, 23.5)
-    love.graphics.draw(Heart_image, 20, 20)
-end
-
-function EnemyAttack(Ex,Ey,enemyType)
-    local dx = Player.x - Ex
-    local dy = Player.y - Ey
+function Combat.enemyAttack(enemy, player)
+    local dx = player.x - enemy.x
+    local dy = player.y - enemy.y
 
     hitTimer = hitTimer + love.timer.getDelta()
-    local canHit = hitTimer > 1
-    if canHit then
-        if enemyType == "cube" then
-            if math.abs(dx) < 50 and math.abs(dy) < 50 then
-                Takedmg(enemyType)
-            end
-        elseif enemyType == "slime" then
-            if math.abs(dx) < 100 and math.abs(dy) < 100 then
-                Takedmg(enemyType)
-            end
+
+    if hitTimer > Config.combat.hit_cooldown then
+        local attackRange = Config.combat.enemy_attack_range[enemy.enemy_type] or 50
+
+        if math.abs(dx) < attackRange and math.abs(dy) < attackRange then
+            local damage = Config.combat.damage_by_type[enemy.enemy_type] or 10
+            player:takeDamage(damage)
         end
+
         hitTimer = 0
     end
 end
+
+function Combat.reset()
+    hitTimer = 0
+end
+
+return Combat

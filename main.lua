@@ -1,43 +1,56 @@
 love = require("love")
-require("variables")
-require("playerFunctions")
-require("enemyFunctions")
-require("Platforms")
-require("combat")
-require("weapon_anim")
-require("enemyAnimations")
+
+local Config = require("config")
+local Player = require("player")
+local Enemy = require("enemy")
+local Weapon = require("weapon")
+local PlatformManager = require("platformmanager")
+local HealthUI = require("healthui")
+local Combat = require("combat")
+
+local gameState = {
+    player = nil,
+    enemy = nil,
+    weapon = nil,
+    platforms = nil,
+}
 
 function love.load()
-    love.window.setMode(1080, 720, {resizable = false, vsync = false})
-    Variables()
-    loadSheets()
+    love.window.setMode(Config.window_width, Config.window_height, {resizable = false, vsync = false})
+
+    gameState.platforms = PlatformManager.create()
+    gameState.player = Player.new()
+    gameState.enemy = Enemy.new("cube")
+    gameState.weapon = Weapon.new(gameState.player)
+
+    HealthUI.init()
 end
 
 function love.update(dt)
-    updateSheet(dt)
-    PlayerMovement(dt)
-    EnemyMovement(dt)
+    gameState.player:update(dt, gameState.platforms)
+
+    gameState.enemy:update(dt, gameState.platforms, gameState.player)
+
+    gameState.weapon:update(dt)
+
+    gameState.weapon:checkCollision(gameState.enemy)
+
+    Combat.enemyAttack(gameState.enemy, gameState.player)
+
+    if gameState.player.health <= 0 then
+        love.event.quit()
+    end
 end
 
 function love.draw()
-    DrawPlatforms()
-    DisplayHP(Player.health)
-    DrawSheet()
-    DrawPlayer()
-    DrawEnemy()
-    love.graphics.rectangle(
-        "line",
-        Enemy.x,
-        Enemy.y,
-        Enemy.width + 2,
-        Enemy.height + 2)
+    love.graphics.setColor(1, 1, 1)
 
-    love.graphics.rectangle(
-        "line",
-        weapon.x,
-        weapon.y,
-        32,32
-    )
+    PlatformManager.draw(gameState.platforms)
+    gameState.player:draw()
+    gameState.enemy:draw()
+    gameState.weapon:draw()
+
+    HealthUI.drawHealthBar(Config.ui.player_health_x, Config.ui.player_health_y, gameState.player.health, gameState.player.maxHealth)
 end
 
 function love.keypressed(key)
@@ -46,11 +59,10 @@ function love.keypressed(key)
     end
 end
 
--- TODO:
--- Enemy movement correction
 -- Player and Enemy hitboxes, collision detection and response
 -- Player health and other GUI elements, Enemy health + rewards?
 -- Enemy and Player attack and animation
+-- Player abilities, maybe some kind of skill tree or something like that also enemies could have them too maybe?
 -- Enemy death animation, Player death animation and game over screen
 -- room designing, dungeon generation
 -- make an actual system for this
